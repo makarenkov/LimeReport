@@ -727,7 +727,11 @@ void ReportDesignWidget::initThemeIfExist(const QString& themeName, const QStrin
 {
     QFile theme(path);
     if (theme.exists()) {
-        theme.open(QIODevice::ReadOnly);
+        if (!theme.open(QIODevice::ReadOnly)) {
+            qWarning().noquote() << tr("Cannot open theme file \"%1\" for reading: %2")
+                                       .arg(theme.fileName(), theme.errorString());
+            return;
+        }
         QString styleSheet = theme.readAll();
         m_themes.insert(themeName, styleSheet);
     }
@@ -1003,7 +1007,12 @@ void ReportDesignWidget::slotItemPropertyObjectNameChanged(const QString& oldNam
 void ReportDesignWidget::addNewDialog()
 {
     QFile templateUi(":/templates/templates/Dialog.ui");
-    templateUi.open(QIODevice::ReadOnly | QIODevice::Text);
+    if (!templateUi.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, tr("Error"),
+                              tr("Cannot open dialog template \"%1\" for reading: %2")
+                                  .arg(templateUi.fileName(), templateUi.errorString()));
+        return;
+    }
     QString templateStr = templateUi.readAll();
     QString dialogName = m_report->scriptContext()->getNewDialogName();
     templateStr.replace("$ClassName$", dialogName);
