@@ -499,7 +499,7 @@ foreach(lang ${LANGUAGES})
     list(APPEND TS_FILES translations/limereport_${lang}.ts)
 endforeach()
 
-if (${QT_VERSION} GREATER_EQUAL 6.7.0)
+if (QT_VERSION VERSION_GREATER_EQUAL 6.7.0)
 
     qt_add_lrelease(
         TS_FILES ${TS_FILES}
@@ -518,7 +518,7 @@ if (${QT_VERSION} GREATER_EQUAL 6.7.0)
         add_dependencies(${PROJECT_NAME}_lrelease ${PROJECT_NAME}_lupdate)
     endif()
 
-elseif (${QT_VERSION} GREATER_EQUAL 6.2.0)
+elseif (QT_VERSION VERSION_GREATER_EQUAL 6.2.0)
 
     qt_add_lrelease(
        ${PROJECT_NAME}
