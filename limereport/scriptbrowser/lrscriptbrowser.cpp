@@ -156,8 +156,7 @@ void ScriptBrowser::on_tbAddDialog_clicked()
         if (!fileNames.isEmpty()) {
             foreach (QString fileName, fileNames) {
                 QFile file(fileName);
-                file.open(QIODevice::ReadOnly);
-                if (file.isOpen()) {
+                if (file.open(QIODevice::ReadOnly)) {
                     QWidget* widget = loader.load(&file);
                     QDialog* dialog = dynamic_cast<QDialog*>(widget);
                     if (dialog) {
@@ -183,6 +182,10 @@ void ScriptBrowser::on_tbAddDialog_clicked()
                     }
                     if (widget)
                         delete widget;
+                } else {
+                    QMessageBox::critical(this, tr("Error"),
+                                          tr("Cannot open \"%1\" for reading: %2")
+                                              .arg(file.fileName(), file.errorString()));
                 }
             }
         }
